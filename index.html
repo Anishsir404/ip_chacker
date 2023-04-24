@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VirusTotal IP Checker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-top: 20px;
+        }
+        
+        form {
+            margin-top: 20px;
+        }
+        
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #3e8e41;
+        }
+        
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>IP Address Suspicious Checker</h1>
+    <form>
+        <label for="ip-address">Enter an IP address:</label>
+        <input type="text" id="ip-address" name="ip-address">
+        <button type="button" onclick="checkSuspicious()">Check</button>
+    </form>
+    <div id="result"></div>
+    <script>
+        function checkSuspicious() {
+            const ipAddress = document.getElementById('ip-address').value;
+            const apiKey = '342a60fcb21fcdd48f4f476885a4a30153ff98747b79f638d0fa639c15eb75a7';
+        
+            fetch(`https://www.virustotal.com/vtapi/v2/ip-address/report?apikey=${apiKey}&ip=${ipAddress}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.response_code === 1 && data.detected_urls.length === 0) {
+                        document.getElementById('result').innerHTML = `<p>${ipAddress} is not suspicious</p>`;
+                    } else {
+                        document.getElementById('result').innerHTML = `<p>${ipAddress} is suspicious</p>`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('result').innerHTML = `<p>Error checking IP address: ${error.message}</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
